@@ -37,8 +37,15 @@ class Tree	{
 	// this should be calculated recursively
 	// you can look at the GetSize() function for an example of a recursive function
 	double GetLength()	{
-		return 0;
+		return RecursiveGetLength(root);
 	}
+
+  double RecursiveGetLength(Node* node) {
+		if (! node->left)	{
+			return GetBranchLength(node);
+		}
+		return GetBranchLength(node) + RecursiveGetSize(node->left) + RecursiveGetSize(node->right);
+  }
 
 	// -----------------
 	// ALREADY IMPLEMENTED
