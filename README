@@ -1,0 +1,51 @@
+Given N genomes of N species, we wish to rebuild the phylogenetic tree of these species using bayesian inference.
+Un arbre à N espèces contient N-1 noeuds parentaux.
+
+
+
+Using the Jukes-Cantor model for mutations:
+------------------------------------------------
+In a time interval t,
+p( X->Y | t ) = (1 - exp(-ut))*1/4 + exp(-ut)*(X==Y)
+
+
+
+
+Calculer la vraissemblance d'un arbre T:
+------------------------------------------------
+Avec PI le produit sur les colonnes i de l'alignement des génomes,
+p( D | T,u ) = PI[ p( Ci | T,u ) ]
+Car on cosnidère que les mutations sont indépendantes les unes des autres (en tout cas à propos des sites de mutation).
+
+à chaque noeud, p(D|N==i) = [ sum_j=ACGT( p(i->j à gauche).p(D|Ng==j)) ] x [ sum_j=ACGT( p(i->j à droite).p(D|Nd==j)) ]
+p(Ci|T,u) = 1/4 * sum_i=ACGT[ p(Ci|N==i) ]
+
+Prior non informative: 
+------------------------------------------------
+- Probabilité uniforme sur les arbres
+- Probabilité exponentielle de moyenne 1 sur u
+Donc prior p(T,u) = p(T)p(u)
+
+
+Th. de Bayes:
+------------------------------------------------
+p( T,u | D ) prop. p( D | T,u ).p(T)p(u)
+
+
+MCMC: Algorithme de Metropolis: (detailed balance OK dans un premier temps)
+------------------------------------------------
+- Proposition de changement: (T,u) -> (T*,u*)
+    - Time-Move: Changer la date d'un noeud
+    - Topo-Move: Changer la topologie de l'arbre (décrocher une branche, la greffer ailleurs à la même date) = mouvement de SPR: Subtree pruning and regrafting
+    - 
+- Calculer le rapport alpha = p(T*,u* | D) / p(T,u | D)
+- Accepter le changement avec un proba min(1, alpha)
+
+
+Tunning parameters:
+------------------------------------------------
+tirer V ~ Unif(0,1)
+multiplier par delta = 0.1 (param du sampler, taille des sauts)
+proposer u* = u + delta*(V-0.5)
+
+Permet d'avoir une balance équilibrée. (Pas de Hastings)
