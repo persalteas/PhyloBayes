@@ -10,14 +10,34 @@ double Sampler::GetLogPrior()	{
 }
 
 double Sampler::GetLogLikelihood()	{
-	return 0;
+  double logL{};
+  for (int i{GetNsite()}; i--;)
+    logL += SiteLogLikelihood(i);
+	return logL;
 }
 
 double Sampler::SiteLogLikelihood(int site)	{
-	return 0;
+	return log(Pruning(site, GetRoot()));
 }
 
 void Sampler::Pruning(int site, Node* node)	{
+
+  double q = exp(- node->GetBranchLength());
+  double p = 1 - q;
+  double delta =
+  if (! node->left)
+    return exp(- rate * t) * delta
+  
+  
+  double lhs{};  
+  for ()
+    lhs +=
+  double rhs{};
+  for ()
+    rhs +=
+  
+  return lhs * rhs ;
+  
 }
 
 int Sampler::RateMove(double tuning)	{
