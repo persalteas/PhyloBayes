@@ -7,7 +7,7 @@ TARGET   = phy_mol
 
 CC	   = g++
 # compiling flags here
-CFLAGS   = -I. -O3 -g
+CFLAGS   = -I. -O3
 CXXFLAGS = -std=c++11 -Wall -Wpedantic -Wextra
 
 LINKER   = g++
