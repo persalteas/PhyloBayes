@@ -28,10 +28,6 @@ class Tree	{
 
 	// restore tree such as was saved upon the last backup
 	void Restore();
-
-	// -----------------
-	// TO BE IMPLEMENTED
-	// -----------------
 	
 	// return the total length of the tree (sum of lengths of all branches)
 	// this should be calculated recursively
@@ -46,10 +42,6 @@ class Tree	{
 		}
 		return node->GetBranchLength() + RecursiveGetLength(node->left) + RecursiveGetLength(node->right);
 	}
-
-	// -----------------
-	// ALREADY IMPLEMENTED
-	// -----------------
 
 	// returns the size of the tree (the number of leaves)
 	// the size is calculated recursively (using RecursiveGetSize, declared below)

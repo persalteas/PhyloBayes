@@ -32,7 +32,7 @@ Data::Data(string infile)	{
 			cerr << "error: non matching sequence length\n";
 			exit(1);
 		}
-		for (int i=0; i<Nsite; i++)	{
+		for (uint i=0; i<Nsite; i++)	{
 			char c = seq[i];
 			if ((c == '-') || (c == '?'))	{
 				tmp[i] = -1;

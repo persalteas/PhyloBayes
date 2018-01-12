@@ -1,12 +1,17 @@
 
 #include "Sampler.h"
 
-// -----------------
-// TO BE IMPLEMENTED
-// -----------------
+double Sampler::GetLogProb()  {
+  // Bayes theorem : p( T,u | D ) prop. p( D | T,u ).p(T,u)
+  // ln p(D,T,U) = ln p(D | T,u) + ln p(T,u) 
+  return GetLogLikelihood() + GetLogPrior();
+}
 
 double Sampler::GetLogPrior()	{
-	return 0;
+  // p(T,u) = p(T).p(u)
+  // ln p(T,u) = ln p(T) + ln p(u)
+  // ln p(T,u) = 0       + ln exp(-u)
+	return -rate;
 }
 
 double Sampler::GetLogLikelihood()	{
@@ -17,6 +22,7 @@ double Sampler::GetLogLikelihood()	{
 }
 
 double Sampler::SiteLogLikelihood(int site)	{
+  // L = sum( 1/4 * L(0,i) )
   double L = 0;
   Pruning(site, GetRoot());
   for (int i=0; i<4; i++)
@@ -71,18 +77,56 @@ void Sampler::Pruning(int site, Node* node)	{
 }
 
 int Sampler::RateMove(double tuning)	{
+  rate = rate + tuning*(Random::Uniform()-0.5);
+	if (rate < 0) rate = -rate;
 	return 0;
 }
 
 int Sampler::TimeMove(double tuning)	{
+  tree->ProposeTimeMove(tuning);
 	return 0;
 }
 
 int Sampler::TopoMove()	{
+  tree->ProposeSPRMove();
 	return 0;
 }
 
 void Sampler::Cycle()	{
+// - Proposition de changement: (T,u) -> (T*,u*)
+//     - Time-Move: Changer la date d'un noeud
+//     - Topo-Move: Changer la topologie de l'arbre (décrocher une branche, la greffer ailleurs à la même date) = mouvement de SPR: Subtree pruning and regrafting
+//     - Rate-Move: Changer le taux de mutation u ( this->rate )
+// - Calculer le rapport alpha = p(T*,u* | D) / p(T,u | D)
+// - Accepter le changement avec un proba min(1, alpha)
+
+
+  int move_type = Random::Choose(3);
+  double bkrate = rate;
+
+  // backup of (T,u)
+  if (move_type < 2) tree->Backup();
+  double logpost1 = GetLogProb();
+
+  // propose (T*,u*)
+  switch (move_type)
+  {
+    case (0): TopoMove(); break;
+    case (1): TimeMove(0.1); break;
+    case (2): RateMove(0.1); 
+  }
+  double logpost2 = GetLogProb();
+
+  // compute ratio of final/initial probs
+  double logalpha = logpost2 - logpost1;
+
+  // decide wether accept or not
+  if (log(Random::Uniform()) >= logalpha) 
+  {
+    // the move is rejected
+    if (move_type < 2) tree->Restore();
+    else rate = bkrate;
+  }
 }
 
 

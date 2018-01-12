@@ -33,7 +33,7 @@ class Data	{
 	private:
 
 	map<string,int*> data;
-	int Nsite;
+	unsigned int Nsite;
 	int Ntaxa;
 	string*namelist;
 

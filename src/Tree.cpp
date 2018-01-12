@@ -1,19 +1,18 @@
 
 #include "Tree.h"
 
-// -----------------
-// TO BE IMPLEMENTED
-// -----------------
-
 void Tree::ProposeTimeMove(double tuning)	{
 
 	// choose an internal node at random
 	// move its age within allowed interval
+	Node* target = ChooseInternalNodeAtRandom();
+	double higher = target->up->time;
+	double lower = max(target->left->time, target->right->time);
+	double size = higher - lower;
+	target->time = target->time + tuning*(size*Random::Uniform() - size/2.0);
+	if (target->time < lower) target->time = lower + (lower - target->time);
+	if (target->time > higher) target->time = higher - (target->time - higher);
 }
-
-// -----------------
-// ALREADY IMPLEMENTED
-// -----------------
 
 Tree::Tree(string filename)	{
 
@@ -153,7 +152,7 @@ Node* Tree::ParseGroup(string input)	{
 
 		// parse input as a list of strings separated by ','
 		string ns1,ns2;
-		int n = input.size();
+		unsigned int n = input.size();
 		k = 0;
 		int brack = 0;
 		b = 0;
@@ -214,7 +213,7 @@ Node* Tree::ChooseInternalNodeAtRandom()	{
 
 	int n = GetSize() - 2;
 	int choose = 1 + ((int) (n * Random::Uniform()));
-	int k = 0;
+	unsigned int k = 0;
 	while (choose)	{
 
 		while ((k < nodelist.size()) && ((nodelist[k]->isRoot()) || (nodelist[k]->isLeaf())))	{
@@ -239,7 +238,7 @@ Node* Tree::ChooseSPRNodeAtRandom()	{
 
 	int n = 2 * GetSize() - 4;
 	int choose = 1 + (int) (n * Random::Uniform());
-	int k = 0;
+	unsigned int k = 0;
 	while (choose)	{
 
 		while ((k < nodelist.size()) && ((nodelist[k]->isRoot()) || (nodelist[k]->up->isRoot())))	{

@@ -2,4 +2,7 @@
 obj
 bin
 *.pdf
-
+.RData
+.Rhistory
+*.trace
+*.treelist
