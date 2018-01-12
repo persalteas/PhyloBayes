@@ -94,7 +94,7 @@ class Node	{
 	Node* right;
 
 	double* condl;
-	string	nodename;
+	string nodename;
 	string branchname;
 	double time;
 
