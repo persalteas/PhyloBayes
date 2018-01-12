@@ -10,9 +10,9 @@ double Sampler::GetLogPrior()	{
 }
 
 double Sampler::GetLogLikelihood()	{
-  double logL{};
-  for (int i{GetNsite()}; i--;)
-    logL += SiteLogLikelihood(i);
+	double logL{};
+	for (int i{GetNsite()}; i--;)
+		logL += SiteLogLikelihood(i);
 	return logL;
 }
 

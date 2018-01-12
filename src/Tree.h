@@ -40,12 +40,12 @@ class Tree	{
 		return RecursiveGetLength(root);
 	}
 
-  double RecursiveGetLength(Node* node) {
+	double RecursiveGetLength(Node* node) {
 		if (! node->left)	{
-			return GetBranchLength(node);
+			return node->GetBranchLength();
 		}
-		return GetBranchLength(node) + RecursiveGetSize(node->left) + RecursiveGetSize(node->right);
-  }
+		return node->GetBranchLength() + RecursiveGetLength(node->left) + RecursiveGetLength(node->right);
+	}
 
 	// -----------------
 	// ALREADY IMPLEMENTED
