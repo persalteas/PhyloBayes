@@ -1,7 +1,8 @@
 
 #include "Sampler.h"
 
-static double TUNING = 0.1;
+static double TUNING_RATE = 0.5;
+static double TUNING_TIME = 8;
 
 double Sampler::GetLogProb() {
   // Bayes theorem : p( T,u | D ) prop. p( D | T,u ).p(T,u)
@@ -157,9 +158,9 @@ void Sampler::Cycle() {
     TopoMove();
     break;
   case (1):
-    TimeMove(TUNING);
+    TimeMove(TUNING_TIME);
     break;
   case (2):
-    RateMove(TUNING);
+    RateMove(TUNING_RATE);
   }
 }
